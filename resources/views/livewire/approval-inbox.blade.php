@@ -64,7 +64,6 @@
                             <th>Request</th>
                             <th>Requester</th>
                             <th>Stage</th>
-                            <th>Priority</th>
                             <th>Received</th>
                             <th>SLA deadline</th>
                             <th>Status</th>
@@ -77,14 +76,13 @@
                             <tr>
                                 <td class="max-w-[300px]">
                                     <a href="{{ route('approvals.show', $task) }}" class="block truncate font-medium underline-offset-2 hover:text-accent hover:underline">{{ $item->title }}</a>
-                                    <span class="mono mt-0.5 block text-[10.5px] text-ink-faint">{{ $item->request_number }} · {{ $item->requestType->name }}</span>
+                                    <span class="mono mt-0.5 block text-[10.5px] text-ink-faint">{{ $item->request_number }} · {{ $item->requestType->name }} · {{ $item->priority->label() }}</span>
                                 </td>
                                 <td class="text-ink-soft">
                                     <span class="block text-[12.5px]">{{ $item->requester->name }}</span>
                                     <span class="block text-[10.5px] text-ink-faint">{{ $item->department?->name }}</span>
                                 </td>
                                 <td class="text-[12px] text-ink-soft">{{ $task->stage->stage_name }}</td>
-                                <td><x-status :label="$item->priority->label()" :tone="$item->priority->tone()" /></td>
                                 <td class="mono text-[11px] text-ink-soft">{{ $task->started_at?->format('d M · H:i') ?? '—' }}</td>
                                 <td class="mono text-[11px]">
                                     @if($task->due_at)

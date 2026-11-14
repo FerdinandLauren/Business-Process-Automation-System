@@ -28,9 +28,12 @@
                             <h2 class="mt-6 text-[15px] font-semibold leading-snug">{{ $type->name }}</h2>
                             <p class="mt-1.5 line-clamp-2 text-[12px] leading-relaxed text-ink-soft">{{ $type->description }}</p>
 
+                            @php
+                                $stageCount = $type->activeWorkflowTemplate()?->stages->count() ?? 0;
+                            @endphp
                             <div class="mt-4 flex items-center justify-between border-t border-line pt-3">
                                 <span class="mono text-[10.5px] text-ink-faint">
-                                    {{ $type->activeWorkflowTemplate()?->stages->count() }} stages ·
+                                    {{ $stageCount }} {{ str('stage')->plural($stageCount) }} ·
                                     {{ $type->activeWorkflowTemplate()?->stages->sum('sla_hours') }}h total SLA
                                 </span>
                                 <span class="flex items-center gap-1 text-[11.5px] font-medium text-ink-soft transition-colors group-hover:text-accent">
