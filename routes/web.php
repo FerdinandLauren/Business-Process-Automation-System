@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AuditLogController;
 use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\RequestTypeController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RequestController;
@@ -72,6 +73,9 @@ Route::middleware(['auth', 'active'])->group(function () {
             Route::get('/users/{user}/edit', [AdminUserController::class, 'edit'])->name('users.edit');
             Route::put('/users/{user}', [AdminUserController::class, 'update'])->name('users.update');
             Route::patch('/users/{user}/status', [AdminUserController::class, 'toggleStatus'])->name('users.status');
+
+            Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
+            Route::patch('/roles', [RoleController::class, 'update'])->name('roles.update');
         });
 
         Route::middleware('can:manage-organisation')->group(function () {

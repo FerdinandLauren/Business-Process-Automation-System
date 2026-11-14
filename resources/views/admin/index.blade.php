@@ -40,6 +40,17 @@
                 </a>
             @endcan
 
+            @can('manage-users')
+                <a href="{{ route('admin.roles.index') }}" class="panel group flex flex-col justify-between p-4 transition hover:border-line-strong">
+                    <div>
+                        <p class="eyebrow">Access control</p>
+                        <h2 class="mt-1 text-[15px] font-semibold">Roles & permissions</h2>
+                        <p class="mt-1 text-[12.5px] leading-relaxed text-ink-soft">Review and adjust the permission matrix that drives navigation and server-side checks.</p>
+                    </div>
+                    <p class="mono mt-4 text-[11px] text-ink-faint">{{ $roles }} roles</p>
+                </a>
+            @endcan
+
             @can('view-audit-logs')
                 <a href="{{ route('admin.audit.index') }}" class="panel group flex flex-col justify-between p-4 transition hover:border-line-strong">
                     <div>
