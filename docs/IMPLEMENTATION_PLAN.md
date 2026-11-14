@@ -125,7 +125,7 @@ Each milestone is a working, testable slice committed separately.
 - Session auth with login throttling, active-account enforcement, password reset (log mailer locally).
 - Policies + Gate, role management, department CRUD, user CRUD.
 - Audit logger wired to auth and admin actions.
-- **Exit:** TC-01/02/03/16/20 style checks pass; seeded demo accounts.
+- **Exit:** `AuthenticationTest`, `AuthorizationTest`, `AdminTest` pass; seeded demo accounts.
 
 ### M2 — Request management
 - Request types, versioned form templates, form builder (admin).
@@ -139,19 +139,19 @@ Each milestone is a working, testable slice committed separately.
 - Instance creation, sequential tasks, approve/reject/revision, cancellation, completion.
 - Approval Inbox + detail with attachments and decision history.
 - Transactional guarantees and double-decision prevention.
-- **Exit:** TC-04…TC-11, TC-17…TC-19 pass.
+- **Exit:** `RequestWorkflowTest`, `ApprovalDecisionTest`, `AttachmentTest`, `Livewire/RequestFormComponentTest`, `Livewire/ApprovalDetailComponentTest`, `Livewire/WorkflowEditorTest` pass.
 
 ### M4 — Notifications & SLA
 - Notification center + bell, unread counts, read actions.
 - Triggers on submit/assign/approve/reject/revision/complete.
 - Business-calendar SLA calculator, due dates, overdue detection, reminder command + scheduler.
-- **Exit:** TC-12, TC-14 pass; SLA unit tests cover weekends and working hours.
+- **Exit:** `SlaMonitorTest` and `SLAServiceTest` pass; SLA unit tests cover weekends and working hours.
 
 ### M5 — Dashboards & reporting
 - Role-aware overview (employee, approver, admin/process admin, management) on live queries.
 - Reports: request summary, approval summary, SLA performance, department activity, status distribution.
 - Filters and streamed CSV export. No static or fabricated numbers.
-- **Exit:** TC-15; dashboard figures reconcile with test fixtures.
+- **Exit:** `ReportTest` and `DashboardTest` pass; dashboard figures reconcile with the database.
 
 ### M6 — Security & QA
 - Authorization sweep, upload hardening, invalid state transitions, concurrency test, notification/SLA tests.
