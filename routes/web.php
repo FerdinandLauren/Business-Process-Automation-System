@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AuditLogController;
+use App\Http\Controllers\Admin\DepartmentController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RequestController;
@@ -69,6 +70,13 @@ Route::middleware(['auth', 'active'])->group(function () {
             Route::get('/users/{user}/edit', [AdminUserController::class, 'edit'])->name('users.edit');
             Route::put('/users/{user}', [AdminUserController::class, 'update'])->name('users.update');
             Route::patch('/users/{user}/status', [AdminUserController::class, 'toggleStatus'])->name('users.status');
+        });
+
+        Route::middleware('can:manage-organisation')->group(function () {
+            Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
+            Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
+            Route::get('/departments/{department}/edit', [DepartmentController::class, 'edit'])->name('departments.edit');
+            Route::put('/departments/{department}', [DepartmentController::class, 'update'])->name('departments.update');
         });
 
         Route::middleware('can:view-audit-logs')->group(function () {

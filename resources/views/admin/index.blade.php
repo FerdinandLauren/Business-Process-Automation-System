@@ -18,6 +18,17 @@
                 </a>
             @endcan
 
+            @can('manage-organisation')
+                <a href="{{ route('admin.departments.index') }}" class="panel group flex flex-col justify-between p-4 transition hover:border-line-strong">
+                    <div>
+                        <p class="eyebrow">Organisation</p>
+                        <h2 class="mt-1 text-[15px] font-semibold">Departments</h2>
+                        <p class="mt-1 text-[12.5px] leading-relaxed text-ink-soft">Maintain the departments used for routing, reporting and data isolation.</p>
+                    </div>
+                    <p class="mono mt-4 text-[11px] text-ink-faint">{{ $departments }} departments</p>
+                </a>
+            @endcan
+
             @can('view-audit-logs')
                 <a href="{{ route('admin.audit.index') }}" class="panel group flex flex-col justify-between p-4 transition hover:border-line-strong">
                     <div>
