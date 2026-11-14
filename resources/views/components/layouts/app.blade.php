@@ -74,13 +74,11 @@
                             <span class="nav-mark"></span> Workflow Management
                         </a>
                     @endcan
-                    @if(Route::has('reports.index'))
-                        @can('view-reports')
-                            <a href="{{ route('reports.index') }}" @class(['nav-link']) @if(request()->routeIs('reports.*')) aria-current="page" @endif>
-                                <span class="nav-mark"></span> Reports
-                            </a>
-                        @endcan
-                    @endif
+                    @can('view-reports')
+                        <a href="{{ route('reports.index') }}" @class(['nav-link']) @if(request()->routeIs('reports.*')) aria-current="page" @endif>
+                            <span class="nav-mark"></span> Reports
+                        </a>
+                    @endcan
                     <a href="{{ route('notifications.index') }}" @class(['nav-link']) @if(request()->routeIs('notifications.*')) aria-current="page" @endif>
                         <span class="nav-mark"></span>
                         <span class="flex-1">Notifications</span>

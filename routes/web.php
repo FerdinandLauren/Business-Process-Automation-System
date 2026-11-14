@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\RequestTypeController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\WorkflowController;
 use App\Livewire\AccountSettings;
@@ -61,6 +62,11 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/workflows/new/{type}', WorkflowEditor::class)->name('workflows.create');
         Route::get('/workflows/{template}', WorkflowEditor::class)->name('workflows.edit');
         Route::post('/workflows/{template}/version', [WorkflowController::class, 'version'])->name('workflows.version');
+    });
+
+    Route::middleware('can:view-reports')->group(function () {
+        Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+        Route::get('/reports/export', [ReportController::class, 'export'])->name('reports.export');
     });
 
     Route::prefix('admin')->name('admin.')->middleware('can:access-admin')->group(function () {
