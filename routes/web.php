@@ -3,6 +3,9 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\AuditLogController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\WorkflowController;
@@ -54,6 +57,23 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/workflows/new/{type}', WorkflowEditor::class)->name('workflows.create');
         Route::get('/workflows/{template}', WorkflowEditor::class)->name('workflows.edit');
         Route::post('/workflows/{template}/version', [WorkflowController::class, 'version'])->name('workflows.version');
+    });
+
+    Route::prefix('admin')->name('admin.')->middleware('can:access-admin')->group(function () {
+        Route::get('/', [AdminController::class, 'index'])->name('index');
+
+        Route::middleware('can:manage-users')->group(function () {
+            Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+            Route::get('/users/create', [AdminUserController::class, 'create'])->name('users.create');
+            Route::post('/users', [AdminUserController::class, 'store'])->name('users.store');
+            Route::get('/users/{user}/edit', [AdminUserController::class, 'edit'])->name('users.edit');
+            Route::put('/users/{user}', [AdminUserController::class, 'update'])->name('users.update');
+            Route::patch('/users/{user}/status', [AdminUserController::class, 'toggleStatus'])->name('users.status');
+        });
+
+        Route::middleware('can:view-audit-logs')->group(function () {
+            Route::get('/audit', [AuditLogController::class, 'index'])->name('audit.index');
+        });
     });
 
     Route::get('/settings', AccountSettings::class)->name('settings.edit');

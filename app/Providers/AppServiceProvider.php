@@ -21,5 +21,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::define('view-audit-logs', fn (User $user) => $user->hasPermission('audit.view'));
         Gate::define('view-reports', fn (User $user) => $user->hasPermission('report.view'));
         Gate::define('process-approvals', fn (User $user) => $user->hasPermission('approval.process'));
+        Gate::define('access-admin', fn (User $user) => $user->hasPermission('user.manage')
+            || $user->hasPermission('organisation.manage')
+            || $user->hasPermission('workflow.manage')
+            || $user->hasPermission('audit.view'));
     }
 }
