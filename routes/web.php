@@ -5,11 +5,13 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RequestController;
+use App\Http\Controllers\WorkflowController;
 use App\Livewire\AccountSettings;
 use App\Livewire\ApprovalDetail;
 use App\Livewire\ApprovalInbox;
 use App\Livewire\NotificationCenter;
 use App\Livewire\RequestForm;
+use App\Livewire\WorkflowEditor;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/overview');
@@ -46,6 +48,13 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get('/approvals/{task}', ApprovalDetail::class)->name('approvals.show');
 
     Route::get('/notifications', NotificationCenter::class)->name('notifications.index');
+
+    Route::middleware('can:manage-workflows')->group(function () {
+        Route::get('/workflows', [WorkflowController::class, 'index'])->name('workflows.index');
+        Route::get('/workflows/new/{type}', WorkflowEditor::class)->name('workflows.create');
+        Route::get('/workflows/{template}', WorkflowEditor::class)->name('workflows.edit');
+        Route::post('/workflows/{template}/version', [WorkflowController::class, 'version'])->name('workflows.version');
+    });
 
     Route::get('/settings', AccountSettings::class)->name('settings.edit');
 });
