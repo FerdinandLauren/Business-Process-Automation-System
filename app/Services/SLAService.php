@@ -89,8 +89,9 @@ class SLAService
         }
 
         $threshold = (int) config('bpa.sla.reminder_hours_before', 4) * 60;
+        $minutesUntilDue = (int) $now->diffInMinutes($dueAt, false);
 
-        return $dueAt->diffInMinutes($now, false) <= $threshold ? 'due_soon' : 'on_track';
+        return $minutesUntilDue <= $threshold ? 'due_soon' : 'on_track';
     }
 
     public function humanizeRemaining(?CarbonInterface $dueAt, ?CarbonInterface $now = null): string
