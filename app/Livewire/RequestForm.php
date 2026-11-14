@@ -176,17 +176,31 @@ class RequestForm extends Component
     }
 
     /**
+     * Service-level validation errors use the raw field keys (for example
+     * "leave_type" or "files.receipt"). The form binds them under "formData.*"
+     * and "fieldFiles.*", so translate the keys before showing them.
+     *
      * @param  array<string, array<int, string>>  $errors
      * @return array<string, array<int, string>>
      */
     private function mapErrors(array $errors): array
     {
+        $fieldKeys = collect($this->formTemplate()?->fields() ?? [])
+            ->pluck('key')
+            ->filter(fn ($key) => is_string($key) && $key !== '')
+            ->all();
+
         $mapped = [];
 
         foreach ($errors as $key => $messages) {
-            $key = str_starts_with($key, 'form_data.')
-                ? 'formData.'.substr($key, strlen('form_data.'))
-                : $key;
+            if (str_starts_with($key, 'form_data.')) {
+                $key = 'formData.'.substr($key, strlen('form_data.'));
+            } elseif (str_starts_with($key, 'files.')) {
+                $key = 'fieldFiles.'.substr($key, strlen('files.'));
+            } elseif (in_array($key, $fieldKeys, true)) {
+                $key = 'formData.'.$key;
+            }
+
             $mapped[$key] = $messages;
         }
 
