@@ -137,6 +137,7 @@ cp .env.example .env
 php artisan key:generate
 
 php artisan migrate --seed
+php artisan bpa:sla-monitor   # records the demo SLA breach; safe to re-run
 npm run build
 
 php artisan serve
@@ -167,14 +168,14 @@ php artisan migrate            # apply
 php artisan migrate:fresh --seed   # rebuild with demo data
 ```
 
-The seeder creates seven departments, eleven users, four request types with published forms, four published workflows and six requests covering approved, rejected, revision-required, pending-at-first-stage and overdue-at-second-stage paths, plus one recorded SLA breach.
-
-To run the SLA monitor manually:
+The seeder creates seven departments, eleven users, four request types with published forms, four published workflows and six requests covering approved, rejected, revision-required, pending-at-first-stage and overdue-at-second-stage paths. The overdue task has no breach recorded until the monitor runs, so run it once after seeding to reproduce the demo state (one breach, two notifications, one audit entry):
 
 ```bash
 php artisan bpa:sla-monitor --dry-run   # show what would happen
 php artisan bpa:sla-monitor             # send reminders, record breaches
 ```
+
+Running it a second time changes nothing — claiming is idempotent.
 
 ## 13. Demo accounts
 

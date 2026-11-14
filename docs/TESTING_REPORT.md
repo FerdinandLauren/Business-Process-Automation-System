@@ -82,4 +82,4 @@ php artisan serve
 npm run build
 ```
 
-The seeder creates seven departments, eleven users, four request types, four published form versions, four published workflows and six requests covering approved, rejected, revision-required, pending-at-first-stage and overdue-at-second-stage paths, plus one recorded SLA breach.
+The seeder creates seven departments, eleven users, four request types, four published form versions, four published workflows and six requests covering approved, rejected, revision-required, pending-at-first-stage and overdue-at-second-stage paths. Running `php artisan bpa:sla-monitor` once after seeding records the single SLA breach on the overdue task; running it again changes nothing.
