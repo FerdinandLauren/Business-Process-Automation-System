@@ -19,6 +19,8 @@ class ApprovalTask extends Model
         'status',
         'started_at',
         'due_at',
+        'reminder_sent_at',
+        'breached_at',
         'completed_at',
     ];
 
@@ -28,8 +30,32 @@ class ApprovalTask extends Model
             'status' => TaskStatus::class,
             'started_at' => 'datetime',
             'due_at' => 'datetime',
+            'reminder_sent_at' => 'datetime',
+            'breached_at' => 'datetime',
             'completed_at' => 'datetime',
         ];
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('status', TaskStatus::Pending->value);
+    }
+
+    public function scopeDueSoon($query, int $hours)
+    {
+        return $query->pending()
+            ->whereNotNull('due_at')
+            ->whereNull('reminder_sent_at')
+            ->where('due_at', '>', now())
+            ->where('due_at', '<=', now()->addHours($hours));
+    }
+
+    public function scopeBreached($query)
+    {
+        return $query->pending()
+            ->whereNotNull('due_at')
+            ->whereNull('breached_at')
+            ->where('due_at', '<', now());
     }
 
     public function workflowInstance(): BelongsTo

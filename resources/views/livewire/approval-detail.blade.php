@@ -68,6 +68,11 @@
                                 {{ $task->isOverdue() ? abs((int) round($task->hoursRemaining())).' hours past deadline' : $task->hoursRemaining().' business hours remaining' }}
                             </dd>
                         @endif
+                        @if($task->breached_at)
+                            <dd class="mono mt-1 text-[10px] uppercase tracking-[0.06em] text-danger">
+                                SLA breach recorded {{ $task->breached_at->format('d M Y, H:i') }}
+                            </dd>
+                        @endif
                     </div>
                     <div class="sm:col-span-2 border-t border-line pt-4">
                         <dt class="eyebrow">Business justification</dt>
@@ -87,9 +92,13 @@
                     </div>
                     <dl class="grid gap-x-8 gap-y-4 p-4 sm:grid-cols-2">
                         @foreach($fields as $field)
-                            @php($key = $field['key'] ?? null)
+                            @php
+                                $key = $field['key'] ?? null;
+                            @endphp
                             @continue(! $key)
-                            @php($value = $serviceRequest->form_data[$key] ?? null)
+                            @php
+                                $value = $serviceRequest->form_data[$key] ?? null;
+                            @endphp
                             <div class="{{ ($field['type'] ?? 'text') === 'textarea' ? 'sm:col-span-2' : '' }}">
                                 <dt class="eyebrow">{{ $field['label'] ?? $key }}</dt>
                                 <dd class="mt-1.5 whitespace-pre-line text-[13px] leading-relaxed text-ink-soft">
@@ -190,7 +199,9 @@
                         <p class="text-[12.5px] leading-relaxed text-ink-soft">This task is waiting for {{ $task->approver?->name }}. You can read the record but cannot decide on their behalf.</p>
                     @else
                         <p class="text-[12.5px] leading-relaxed text-ink-soft">You {{ str_replace('_', ' ', $task->status->value) }} this task on {{ $task->completed_at?->format('d M Y, H:i') }}.</p>
-                        @php($myHistory = $task->histories->last())
+                        @php
+                            $myHistory = $task->histories->last();
+                        @endphp
                         @if($myHistory?->comment)
                             <div class="mt-3 border-l-2 border-line-strong pl-3">
                                 <p class="eyebrow">Your note</p>
@@ -208,8 +219,10 @@
                 </div>
                 <div class="p-4">
                     @foreach($instance->workflowTemplate->stages as $stage)
-                        @php($stageTask = $instance->tasks->where('workflow_stage_id', $stage->id)->sortByDesc('id')->first())
-                        @php($isCurrent = $instance->current_stage_order === $stage->stage_order && $instance->isRunning())
+                        @php
+                            $stageTask = $instance->tasks->where('workflow_stage_id', $stage->id)->sortByDesc('id')->first();
+                            $isCurrent = $instance->current_stage_order === $stage->stage_order && $instance->isRunning();
+                        @endphp
                         <div class="relative flex gap-3 pb-5 last:pb-0">
                             @if(! $loop->last)<span class="absolute left-[10px] top-5 h-full w-px bg-line"></span>@endif
                             <span class="mono relative z-10 flex h-5 w-5 flex-none items-center justify-center rounded-full border text-[10px]
