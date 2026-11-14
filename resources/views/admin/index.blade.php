@@ -29,6 +29,17 @@
                 </a>
             @endcan
 
+            @can('manage-workflows')
+                <a href="{{ route('admin.request-types.index') }}" class="panel group flex flex-col justify-between p-4 transition hover:border-line-strong">
+                    <div>
+                        <p class="eyebrow">Process catalogue</p>
+                        <h2 class="mt-1 text-[15px] font-semibold">Request types & forms</h2>
+                        <p class="mt-1 text-[12.5px] leading-relaxed text-ink-soft">Publish versioned forms and keep the request catalogue current.</p>
+                    </div>
+                    <p class="mono mt-4 text-[11px] text-ink-faint">{{ $requestTypes }} active types</p>
+                </a>
+            @endcan
+
             @can('view-audit-logs')
                 <a href="{{ route('admin.audit.index') }}" class="panel group flex flex-col justify-between p-4 transition hover:border-line-strong">
                     <div>

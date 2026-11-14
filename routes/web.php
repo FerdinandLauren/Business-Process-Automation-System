@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\AuditLogController;
 use App\Http\Controllers\Admin\DepartmentController;
+use App\Http\Controllers\Admin\RequestTypeController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RequestController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\WorkflowController;
 use App\Livewire\AccountSettings;
 use App\Livewire\ApprovalDetail;
 use App\Livewire\ApprovalInbox;
+use App\Livewire\FormTemplateEditor;
 use App\Livewire\NotificationCenter;
 use App\Livewire\RequestForm;
 use App\Livewire\WorkflowEditor;
@@ -77,6 +79,18 @@ Route::middleware(['auth', 'active'])->group(function () {
             Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
             Route::get('/departments/{department}/edit', [DepartmentController::class, 'edit'])->name('departments.edit');
             Route::put('/departments/{department}', [DepartmentController::class, 'update'])->name('departments.update');
+        });
+
+        Route::middleware('can:manage-workflows')->group(function () {
+            Route::get('/request-types', [RequestTypeController::class, 'index'])->name('request-types.index');
+            Route::get('/request-types/create', [RequestTypeController::class, 'create'])->name('request-types.create');
+            Route::post('/request-types', [RequestTypeController::class, 'store'])->name('request-types.store');
+            Route::get('/request-types/{requestType}/edit', [RequestTypeController::class, 'edit'])->name('request-types.edit');
+            Route::put('/request-types/{requestType}', [RequestTypeController::class, 'update'])->name('request-types.update');
+            Route::patch('/request-types/{requestType}/status', [RequestTypeController::class, 'toggleStatus'])->name('request-types.status');
+
+            Route::get('/request-types/{requestType}/forms/new', FormTemplateEditor::class)->name('request-types.forms.create');
+            Route::get('/request-types/{requestType}/forms/{template}', FormTemplateEditor::class)->name('request-types.forms.edit');
         });
 
         Route::middleware('can:view-audit-logs')->group(function () {
