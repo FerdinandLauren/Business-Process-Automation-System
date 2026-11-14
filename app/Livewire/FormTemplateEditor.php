@@ -48,6 +48,12 @@ class FormTemplateEditor extends Component
 
     public function mount(RequestType $requestType, ?FormTemplate $template = null): void
     {
+        // Livewire's dependency injection can hand us an empty model instance for an
+        // optional parameter that was not passed. Treat that as "not provided".
+        if ($template !== null && ! $template->exists) {
+            $template = null;
+        }
+
         $this->typeId = $requestType->getKey();
         $this->typeName = $requestType->name;
         $this->typeCode = $requestType->code;

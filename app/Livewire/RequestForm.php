@@ -47,6 +47,12 @@ class RequestForm extends Component
 
     public function mount(?RequestType $type = null, ?ServiceRequest $request = null): void
     {
+        // Livewire's dependency injection can hand us an empty model instance for an
+        // optional parameter that was not passed. Treat that as "not provided".
+        if ($request !== null && ! $request->exists) {
+            $request = null;
+        }
+
         if ($request !== null) {
             Gate::authorize('update', $request);
 

@@ -39,6 +39,12 @@ class WorkflowEditor extends Component
 
     public function mount(?RequestType $type = null, ?WorkflowTemplate $template = null): void
     {
+        // Livewire's dependency injection can hand us an empty model instance for an
+        // optional parameter that was not passed. Treat that as "not provided".
+        if ($template !== null && ! $template->exists) {
+            $template = null;
+        }
+
         if ($template !== null) {
             $template->load(['requestType', 'stages']);
 
