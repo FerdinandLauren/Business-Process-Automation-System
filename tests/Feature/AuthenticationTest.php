@@ -86,6 +86,28 @@ class AuthenticationTest extends TestCase
         $this->assertDatabaseHas('audit_logs', ['action' => 'auth.logout']);
     }
 
+    public function test_repeated_failed_sign_ins_are_rate_limited(): void
+    {
+        for ($attempt = 0; $attempt < 5; $attempt++) {
+            $this->post('/login', [
+                'email' => 'ferdinand@arunika.test',
+                'password' => 'wrong-password',
+            ]);
+        }
+
+        $response = $this->from('/login')->post('/login', [
+            'email' => 'ferdinand@arunika.test',
+            'password' => 'password',
+        ]);
+
+        $response->assertSessionHasErrors('email');
+        $this->assertStringContainsString(
+            'Too many sign-in attempts',
+            session('errors')->first('email'),
+        );
+        $this->assertGuest();
+    }
+
     public function test_the_password_is_hashed_in_the_database(): void
     {
         $user = User::where('email', 'ferdinand@arunika.test')->firstOrFail();
