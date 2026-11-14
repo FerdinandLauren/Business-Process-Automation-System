@@ -9,7 +9,7 @@
 
     @if($errors->any())
         <div class="border border-danger/25 bg-danger-soft px-4 py-3" role="alert">
-            <p class="text-[12.5px] font-medium text-danger">The request could not be saved.</p>
+            <p class="text-[12.5px] font-medium text-danger">Saved as a draft — some details still need your attention.</p>
             <ul class="mt-1.5 space-y-0.5 text-[12px] text-danger/90">
                 @foreach($errors->all() as $error)
                     <li>{{ $error }}</li>

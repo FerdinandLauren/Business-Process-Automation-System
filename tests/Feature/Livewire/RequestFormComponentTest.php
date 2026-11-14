@@ -53,7 +53,7 @@ class RequestFormComponentTest extends TestCase
     {
         $this->actingAs($this->user('ferdinand@arunika.test'));
 
-        $component = Livewire::test(RequestForm::class, ['type' => $this->leaveType(), 'request' => null]);
+        $component = Livewire::test(RequestForm::class, ['type' => $this->leaveType()]);
 
         $this->fillLeaveForm($component)->call('submitRequest');
 
@@ -70,7 +70,7 @@ class RequestFormComponentTest extends TestCase
     {
         $this->actingAs($this->user('ferdinand@arunika.test'));
 
-        $component = Livewire::test(RequestForm::class, ['type' => $this->leaveType(), 'request' => null]);
+        $component = Livewire::test(RequestForm::class, ['type' => $this->leaveType()]);
 
         $component->set('title', 'Draft leave request for the year-end break')->call('saveDraft');
 
@@ -86,12 +86,17 @@ class RequestFormComponentTest extends TestCase
     {
         $this->actingAs($this->user('ferdinand@arunika.test'));
 
-        Livewire::test(RequestForm::class, ['type' => $this->leaveType(), 'request' => null])
+        Livewire::test(RequestForm::class, ['type' => $this->leaveType()])
             ->set('title', 'Incomplete leave request')
             ->call('submitRequest')
-            ->assertHasErrors(['formData.leave_type', 'formData.start_date', 'formData.handover']);
+            ->assertHasErrors(['formData.leave_type', 'formData.start_date', 'formData.handover'])
+            ->assertSee('Saved as a draft');
 
-        $this->assertSame(0, ServiceRequest::where('title', 'Incomplete leave request')->where('status', '!=', 'draft')->count());
+        // The draft is kept so the requester can finish it later; the workflow is not started.
+        $draft = ServiceRequest::where('title', 'Incomplete leave request')->firstOrFail();
+
+        $this->assertSame(RequestStatus::Draft, $draft->status);
+        $this->assertNull($draft->workflowInstance);
     }
 
     public function test_a_missing_required_attachment_is_shown_on_the_file_field(): void
@@ -100,7 +105,6 @@ class RequestFormComponentTest extends TestCase
 
         Livewire::test(RequestForm::class, [
             'type' => RequestType::where('code', 'REIMB')->firstOrFail(),
-            'request' => null,
         ])
             ->set('title', 'Taxi fares for the client workshop')
             ->set('formData.expense_category', 'Travel')
@@ -115,7 +119,7 @@ class RequestFormComponentTest extends TestCase
     {
         $this->actingAs($this->user('ferdinand@arunika.test'));
 
-        Livewire::test(RequestForm::class, ['type' => $this->leaveType(), 'request' => null])
+        Livewire::test(RequestForm::class, ['type' => $this->leaveType()])
             ->call('saveDraft')
             ->assertHasErrors(['title']);
     }
